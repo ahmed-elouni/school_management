@@ -64,13 +64,14 @@ const Performance = () => {
 
   const fetchClasses = async () => {
     try {
+      setIsLoading(true);
       const response = await axios.get('http://localhost:4000/api/v1/class');
-      setClasses(response.data.classes || []);
-      if (response.data.classes.length > 0) {
-        setSelectedClass(response.data.classes[0]._id);
-      }
+      setClasses(response.data);
     } catch (error) {
-      toast.error('Échec du chargement des classes');
+      toast.error('Erreur lors du chargement des classes');
+      console.error('Error fetching classes:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
