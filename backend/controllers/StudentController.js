@@ -6,6 +6,7 @@ import autoTable from 'jspdf-autotable';
 import fs from 'fs';
 import path from 'path';
 import mongoose from 'mongoose';
+import PDFDocument from "pdfkit";
 
 const handleFileUpload = (file) => {
   if (!file) return null;
@@ -195,24 +196,55 @@ export const deleteStudent = async (req, res, next) => {
 
 export const searchStudents = async (req, res, next) => {
   try {
-    const { q, niveau, classe } = req.query;
+    const {
+      niveau,
+      classe,
+      searchQuery,
+      page = 1,
+      limit = 10,
+      sortBy = "nom:asc"
+    } = req.query;
+
     const filter = {};
     if (niveau) filter.niveau = niveau;
     if (classe) filter.classe = classe;
-    if (q) {
+
+    if (searchQuery) {
       filter.$or = [
-        { nom: { $regex: q, $options: 'i' } },
-        { prenom: { $regex: q, $options: 'i' } },
-        { matricule: { $regex: q, $options: 'i' } }
+        { nom: { $regex: searchQuery, $options: 'i' } },
+        { prenom: { $regex: searchQuery, $options: 'i' } },
+        { matricule: { $regex: searchQuery, $options: 'i' } }
       ];
     }
-    const students = await Student.find(filter).populate('niveau').populate('classe').limit(50);
-    res.status(200).json({ success: true, count: students.length, data: students });
+
+    const [sortField, sortOrder] = sortBy.split(":");
+    const sortOptions = {};
+    sortOptions[sortField] = sortOrder === "desc" ? -1 : 1;
+
+    const [students, total] = await Promise.all([
+      Student.find(filter)
+        .populate('niveau')
+        .populate('classe')
+        .sort(sortOptions)
+        .skip((page - 1) * limit)
+        .limit(parseInt(limit)),
+      Student.countDocuments(filter)
+    ]);
+
+    res.status(200).json({
+      success: true,
+      count: students.length,
+      total,
+      pages: Math.ceil(total / limit),
+      currentPage: parseInt(page),
+      data: students
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false, message: 'Erreur serveur', error: err.message });
   }
 };
+
 export const exportStudentPDF = async (req, res, next) => {
   try {
     const student = await Student.findById(req.params.id)
@@ -277,12 +309,10 @@ export const exportStudentPDF = async (req, res, next) => {
     });
   }
 };
-///////
-import PDFDocument from "pdfkit";
 
 // Obtenir les niveaux disponibles
 export const getLevels = async (req, res) => {
-    try {
+  try {
     const levels = await Student.distinct("niveau");
     res.status(200).json({ data: levels });
   } catch (error) {
@@ -300,7 +330,6 @@ export const getClassesByLevel = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
 
 // Exporter la liste des élèves en PDF
 export const exportPDF = async (req, res) => {

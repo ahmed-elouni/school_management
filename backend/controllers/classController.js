@@ -71,3 +71,19 @@ export const deleteClass = async (req, res, next) => {
     next(error);
   }
 };
+// Récupérer les classes par niveau
+export const getClassesByNiveau = async (req, res, next) => {
+  try {
+    const { niveauId } = req.params;
+
+    if (!niveauId.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).json({ message: 'ID de niveau invalide' });
+    }
+
+    const classes = await Class.find({ niveau: niveauId }).select('name _id').sort('name');
+
+    res.json(classes);
+  } catch (error) {
+    next(error);
+  }
+};

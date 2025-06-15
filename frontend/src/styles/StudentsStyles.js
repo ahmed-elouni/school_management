@@ -1,5 +1,5 @@
 // src/styles/StudentsStyles.js
-/*import styled from "styled-components";
+import styled from "styled-components";
 
 export const StudentsContainer = styled.div`
    display: flex;
@@ -333,7 +333,7 @@ export const ExportButton = styled.button`
     background-color: #c0392b;
   }
 `;
-*/
+/*
 // src/styles/StudentsStyles.js
 import styled from "styled-components";
 
@@ -678,3 +678,4 @@ export const Content = styled.div`
   height: 100vh;
   background-color: #f5f5f5;
 `;
+*/

@@ -3,11 +3,12 @@ import {
   createClass,
   getAllClasses,
   updateClass,
-  deleteClass
+  deleteClass,
+  getClassesByNiveau
 } from '../controllers/classController.js';
 
 const router = express.Router();
-
+router.get('/by-level/:niveauId', getClassesByNiveau);
 router.post('/', createClass);
 router.get('/', getAllClasses);
 router.put('/:id', updateClass);
