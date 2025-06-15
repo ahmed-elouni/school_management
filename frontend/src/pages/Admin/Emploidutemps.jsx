@@ -494,7 +494,7 @@ const EmploiDuTemps = () => {
 
         <StyledModal
           title={`Ajouter un cours - ${selectedCell?.jour} ${selectedCell?.heure}`}
-          visible={isModalVisible}
+          open={isModalVisible}
           onOk={handleOk}
           onCancel={handleCancel}
           okText="Ajouter"
