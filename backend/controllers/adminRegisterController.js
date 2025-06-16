@@ -25,3 +25,15 @@ export const adminRegister = async (req, res, next) => {
     next(err);
   }
 };
+export const GetAdminEmail = async (req, res, next) => {
+
+    try {
+    const admins = await Admin.find({}, 'email'); // Get all emails only
+
+    const emails = admins.map(admin => admin.email);
+
+    res.status(200).json({ success: true, emails });
+  } catch (err) {
+    next(err);
+  }
+};
