@@ -20,12 +20,17 @@ import adminRegisterRouter from "./routers/adminRegisterRouter.js"
 import announcementRouter from "./routers/announcementRouter.js";
 import trimestreRoutes from "./routers/trimestreRoutes.js";
 import AnneeScolaireRoutes from "./routers/anneeScolaireRoutes.js";
-import usersRouter from "./routers/usersRouter.js"
+import usersRouter from "./routers/usersRouter.js";
+import settingsProfileRouter from "./routers/settingsProfileRouter.js";
 const app = express();
 app.use(cors({
   origin: 'http://localhost:5173',
   credentials: true
 }));
+
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
+
 app.use(express.json());
 
 config({path: "./config/config.env"});
@@ -59,12 +64,17 @@ app.use('/api/v1/attendance', attendanceRouter);
 app.use("/api/v1/trimestres", trimestreRoutes);
 app.use("/api/v1/announcements", announcementRouter);
 app.use("/api/v1/annees-scolaires", AnneeScolaireRoutes);
+app.use("/api/v1/admin", settingsProfileRouter);
+
 
 
 // Global error handler
 app.use((err, req, res, next) => {
   errorHandler(err, req, res, next);
 });
+
+//app.use(express.json({ limit: '100mb' }));
+//app.use(express.urlencoded({ limit: '100mb', extended: true }));
 
 dbConnection();
 
