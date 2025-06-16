@@ -568,7 +568,7 @@ const Teachers = () => {
         {/* Modal pour ajouter/modifier un professeur */}
         <Modal
           title={`${form.getFieldValue('_id') ? 'Modifier' : 'Ajouter'} un professeur`}
-          visible={isModalVisible}
+          open={isModalVisible}
           onOk={handleSubmit}
           onCancel={() => setIsModalVisible(false)}
           okText="Enregistrer"
@@ -694,7 +694,7 @@ const Teachers = () => {
         {/* Modal pour ajouter une absence */}
         <Modal
           title="Enregistrer une absence"
-          visible={isAbsenceModalVisible}
+          open={isAbsenceModalVisible}
           onOk={handleAbsenceSubmit}
           onCancel={() => setIsAbsenceModalVisible(false)}
           okText="Enregistrer"
@@ -738,7 +738,7 @@ const Teachers = () => {
         {/* Modal pour les heures travaillées */}
         <Modal
           title={`Heures travaillées - ${selectedTeacher?.name}`}
-          visible={isHoursModalVisible}
+          open={isHoursModalVisible}
           onOk={handleHoursSubmit}
           onCancel={() => setIsHoursModalVisible(false)}
           okText="Enregistrer"
