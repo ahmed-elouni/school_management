@@ -1,12 +1,12 @@
 import { Attendance } from "../models/attendanceSchema.js";
 import { Class } from "../models/classSchema.js";
-import { Student } from "../models/studentSchema.js";
+import { Student } from "../models/StudentSchema.js";
 import { handleValidationError } from "../middlewares/errorHandler.js";
 
 export const markAttendance = async (req, res, next) => {
   try {
     const { date, classId, records } = req.body;
-
+    console.log("Received attendance data:", { date, classId, records });
     // Validation
     if (!date || !classId || !records || !Array.isArray(records)) {
       return handleValidationError("Données de présence invalides", 400);
